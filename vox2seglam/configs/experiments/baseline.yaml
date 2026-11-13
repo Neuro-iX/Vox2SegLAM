@@ -1,0 +1,25 @@
+# The reference recipe of the paper: the code defaults of vox2seglam/config, except for the
+# gradient flow, which is stated below. U-Net 16..256 with deep supervision (D7, D8), graph
+# network of 2 steps on the maximum spanning tree of the landmarks (automatic template of the
+# training split), local refiner (17 x 17 x 17 patch, pitch 1 voxel, 64 channels), every stage
+# learning from its own loss only, staged curriculum, HOA 16 landmarks / 17 classes, LAS,
+# deterministic. Every recipe of the paper extends it; final/hoa16/hoa16f_med_stg_s0 is this
+# recipe with its own output directory.
+
+name: baseline
+
+# Set explicitly in EVERY recipe, including those that inherit: otherwise two runs would
+# share an output directory, and --resume would restart from another run's checkpoint.
+paths:
+  exp_dir: ./experiments/baseline
+
+# The staged curriculum of the campaign's "stg" arm, written out rather than inherited. The
+# code default is the end-to-end arm ("jnt") -- the method the paper reports and the published
+# checkpoints were trained with -- so stating these three here is what keeps every recipe that
+# extends this file meaning exactly what it meant when it was run. The "jnt" recipes override
+# them back to false.
+model:
+  lam:
+    detach_backbone: true
+    detach_between_steps: true
+    detach_graph_for_refiner: true

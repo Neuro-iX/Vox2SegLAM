@@ -1,0 +1,47 @@
+# The 39 structures of the Harvard-Oxford Atlas 2.0 label set, which the second
+# published model segments (--structures 39). `freesurfer` is the label the same
+# structure carries in FreeSurfer's own table, where it has one: the two ventral
+# diencephalon halves are a split the protocol introduces and FreeSurfer does not.
+#
+# The 16 structures the protocol governs are in regions.yaml, numbered differently:
+# this file belongs to the other model and the two must not be mixed up.
+regions40:
+  - {id: 1, short: CWM_L, name: "Left Cerebral White Matter", freesurfer: 2}
+  - {id: 2, short: CWM_R, name: "Right Cerebral White Matter", freesurfer: 41}
+  - {id: 3, short: CGM_L, name: "Left Cerebral Cortex", freesurfer: 3}
+  - {id: 4, short: CGM_R, name: "Right Cerebral Cortex", freesurfer: 42}
+  - {id: 5, short: CBWM_L, name: "Left Cerebellum White Matter", freesurfer: 7}
+  - {id: 6, short: CBWM_R, name: "Right Cerebellum White Matter", freesurfer: 46}
+  - {id: 7, short: CBGM_L, name: "Left Cerebellum Cortex", freesurfer: 8}
+  - {id: 8, short: CBGM_R, name: "Right Cerebellum Cortex", freesurfer: 47}
+  - {id: 9, short: LV_L, name: "Left Lateral Ventricle", freesurfer: 4}
+  - {id: 10, short: LV_R, name: "Right Lateral Ventricle", freesurfer: 43}
+  - {id: 11, short: CSF, name: "Cerebrospinal Fluid", freesurfer: 24}
+  - {id: 12, short: V3, name: "Third Ventricle", freesurfer: 14}
+  - {id: 13, short: V4, name: "Fourth Ventricle", freesurfer: 15}
+  - {id: 14, short: NACC_L, name: "Left Nucleus Accumbens", freesurfer: 26}
+  - {id: 15, short: NACC_R, name: "Right Nucleus Accumbens", freesurfer: 58}
+  - {id: 16, short: CAU_L, name: "Left Caudate", freesurfer: 11}
+  - {id: 17, short: CAU_R, name: "Right Caudate", freesurfer: 50}
+  - {id: 18, short: PUT_L, name: "Left Putamen", freesurfer: 12}
+  - {id: 19, short: PUT_R, name: "Right Putamen", freesurfer: 51}
+  - {id: 20, short: GP_L, name: "Left Globus Pallidus", freesurfer: 13}
+  - {id: 21, short: GP_R, name: "Right Globus Pallidus", freesurfer: 52}
+  - {id: 22, short: BRAINSTEM, name: "Brainstem", freesurfer: 16}
+  - {id: 23, short: TH_L, name: "Left Thalamus", freesurfer: 10}
+  - {id: 24, short: TH_R, name: "Right Thalamus", freesurfer: 49}
+  - {id: 25, short: IH_L, name: "Left Inferior Horn", freesurfer: 5}
+  - {id: 26, short: IH_R, name: "Right Inferior Horn", freesurfer: 44}
+  - {id: 27, short: HF_L, name: "Left Hippocampal Formation", freesurfer: 17}
+  - {id: 28, short: HF_R, name: "Right Hippocampal Formation", freesurfer: 53}
+  - {id: 29, short: AMY_L, name: "Left Amygdala", freesurfer: 18}
+  - {id: 30, short: AMY_R, name: "Right Amygdala", freesurfer: 54}
+  - {id: 31, short: VDC_A_L, name: "Left Ventral Diencephalon Anterior", freesurfer: 28}
+  - {id: 32, short: VDC_A_R, name: "Right Ventral Diencephalon Anterior", freesurfer: 60}
+  - {id: 33, short: VDC_P_L, name: "Left Ventral Diencephalon Posterior", freesurfer: null}
+  - {id: 34, short: VDC_P_R, name: "Right Ventral Diencephalon Posterior", freesurfer: null}
+  - {id: 35, short: CC_POST, name: "Corpus Callosum Posterior", freesurfer: 251}
+  - {id: 36, short: CC_MPOST, name: "Corpus Callosum Mid Posterior", freesurfer: 252}
+  - {id: 37, short: CC_CENT, name: "Corpus Callosum Central", freesurfer: 253}
+  - {id: 38, short: CC_MANT, name: "Corpus Callosum Mid Anterior", freesurfer: 254}
+  - {id: 39, short: CC_ANT, name: "Corpus Callosum Anterior", freesurfer: 255}

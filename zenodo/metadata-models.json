@@ -1,0 +1,47 @@
+{
+  "_comment": "Zenodo deposition metadata for the record that carries the trained models and everything the model needs to run: the weights, their configurations, the fitted protocol post-processing, the reference grid and the subject lists. Paste these fields into the upload form. Zenodo's resource type for this is Model, not Dataset: a trained model is neither. The description Zenodo shows is zenodo/models.md, which is uploaded as a file too, so there is deliberately no \"description\" field here. This is the record vox2seglam/assets.py downloads from, and the DOI the software is cited by.",
+  "title": "Vox2SegLAM 1.0.0: pre-trained models, reference grid and subject lists",
+  "upload_type": "model",
+  "version": "1.0.0",
+  "language": "eng",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Rekik, Ahmed",
+      "affiliation": "École de Technologie Supérieure",
+      "orcid": "0009-0001-9369-857X"
+    }
+  ],
+  "keywords": [
+    "neuroimaging",
+    "magnetic resonance imaging",
+    "brain MRI",
+    "subcortical segmentation",
+    "anatomical landmarks",
+    "graph neural network",
+    "Human Connectome Project",
+    "pretrained model"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Neuro-iX/Vox2SegLAM",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.24206546",
+      "relation": "isSupplementedBy",
+      "resource_type": "dataset",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.23603599",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-other",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "The models were trained on Human Connectome Project data. If you redistribute them or anything derived from them, check that the HCP's data use terms allow it. The MRI volumes themselves are not here."
+}

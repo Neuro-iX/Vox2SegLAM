@@ -1,0 +1,43 @@
+# AFIDs Vox2SegLAM, frozen U-Net of hoa40f_med_stg_s0, med,
+# 88 training subjects, seed 0
+
+name: afids_v2sl_med_stg_n88_s0
+extends: baseline
+
+paths:
+  exp_dir: ./experiments/afids_v2sl_med_stg_n88_s0
+  data_root: data_afids
+  landmark_dir: Landmarks_Volumes
+  landmark_suffix: _afids_32.nii.gz
+  split_train: afids_nnlm_train_ids.txt
+  split_val: afids_nnlm_val_ids.txt
+  split_test: afids_nnlm_test_ids.txt
+preprocess:
+  skull_stripped: false
+  bias_field_corrected: false
+task:
+  n_landmarks: 32
+  n_classes: 1  # unused without a segmentation head
+model:
+  backbone:
+    encoder_channels: [16, 32, 64, 128, 256]
+    decoder_channels: [128, 64, 32, 16]
+  lam:
+    graph_channels: [160, 160]
+    refine_hidden: 64
+  seg_head:
+    enabled: false
+    deep_supervision: false
+loss:
+  adaptive_weighting: false
+  init_w_seg: 0.0
+  init_w_lm: 1.0
+train:
+  epochs: 600
+  eval_every: 1
+  init_unet_from: experiments/hoa40f_med_stg_s0/best.pt
+  freeze_unet: true
+staging:
+  gnn_must_beat_template: false
+repro:
+  seed: 0

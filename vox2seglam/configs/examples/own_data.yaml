@@ -1,0 +1,44 @@
+# Training on your own cohort: copy this file, edit what differs, then
+#     vox2seglam train --config my_cohort.yaml
+# Everything not listed keeps the paper's recipe (`extends: baseline`).
+
+name: my_cohort
+extends: baseline
+
+paths:
+  data_root: /path/to/cohort          # holds the four directories below
+  image_dir: MRI_Volumes              # {id}<image_suffix>, already on the reference grid
+  seg_dir: Segmentation               # {id}<seg_suffix>: integer labels, 0 = background
+  landmark_dir: Landmarks             # {id}<landmark_suffix>: voxel k holds the value k
+  image_suffix: .nii.gz
+  seg_suffix: .nii.gz
+  landmark_suffix: _landmarks.nii.gz
+  splits_dir: /path/to/cohort/splits  # plain-text files, one subject id per line
+  split_train: train.txt              # at least 10 subjects (see model.lam.graph_lambda)
+  split_val: val.txt
+  split_test: test.txt
+  exp_dir: ./experiments/my_cohort    # config, checkpoints, logs and landmark template
+
+task:
+  n_landmarks: 16                     # K, as many as your landmark volumes carry
+  n_classes: 17                       # segmentation classes, background included
+  # 16 landmarks with 17 classes is also the protocol's own pairing, and it is the one thing
+  # the code cannot tell apart from it: a prediction will label your landmarks and classes
+  # with the protocol's anatomical names. Any other pair of counts gets bare LM<id> labels and
+  # no class names. Edit vox2seglam/protocol/data/*.yaml if yours mean something else.
+  # patch_size / voxel_spacing_mm describe the grid of your volumes (ZYX, mm); the
+  # defaults are 240 x 304 x 240 at 0.7 mm, LAS
+
+preprocess:
+  skull_stripped: true                # false if the images in image_dir already are
+  bias_field_corrected: true          # false if they already are
+
+train:
+  epochs: 600
+
+# With fewer than 10 training subjects the graph penalty cannot be cross-validated:
+# fix it, or connect every pair of landmarks.
+# model:
+#   lam:
+#     graph_lambda: 0.1
+#     graph_topology: mst           # or fully_connected

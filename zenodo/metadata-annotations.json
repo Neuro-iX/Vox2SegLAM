@@ -1,0 +1,47 @@
+{
+  "_comment": "Zenodo deposition metadata for the record that carries the landmark annotations and the tables that describe the study: which subject is in which split, what each class integer means, and the out-of-domain cohort. Paste these fields into the upload form. The code never downloads from this record -- it is what a reader needs to redo the experiments. The description Zenodo shows is zenodo/annotations.md, uploaded as a file too, so there is deliberately no \"description\" field here.",
+  "title": "Vox2SegLAM 1.0.0: landmark annotations, split assignment and label tables",
+  "upload_type": "dataset",
+  "version": "1.0.0",
+  "language": "eng",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Rekik, Ahmed",
+      "affiliation": "École de Technologie Supérieure",
+      "orcid": "0009-0001-9369-857X"
+    }
+  ],
+  "keywords": [
+    "neuroimaging",
+    "magnetic resonance imaging",
+    "brain MRI",
+    "subcortical segmentation",
+    "anatomical landmarks",
+    "graph neural network",
+    "Human Connectome Project",
+    "anatomical landmark annotations"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Neuro-iX/Vox2SegLAM",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.24205672",
+      "relation": "isSupplementTo",
+      "resource_type": "model",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.23603599",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-other",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "The MRI volumes are not redistributed here. The HOA subjects come from the Human Connectome Project under its data use terms; the out-of-domain scans are on OpenNeuro (ds000115, ds003499, ds003568, ds003763, ds006067). Every table names its subjects so the images can be fetched from the source."
+}

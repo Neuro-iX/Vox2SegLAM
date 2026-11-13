@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    # Both ends of requires-python (">=3.11"): the declared floor, and the version the
+    # published results were produced with, on the three platforms users run it on.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      # CPU wheels only: the suite needs no GPU, and the CUDA build is a 2.5 GB download
+      # (macOS wheels on PyPI are CPU/MPS builds already)
+      - name: Install torch (CPU)
+        if: runner.os != 'macOS'
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install the package and its test extra
+        run: pip install -e ".[test]"
+
+      - name: Tests
+        run: pytest -q
+
+      # The suite runs from the repository, where configs/ is found. Check that what is
+      # actually installed also works on its own: the protocol and the landmark templates
+      # ship as package data, and Config() must build the published baseline with no file
+      # at all. This is the check that an editable install silently passes.
+      - name: Installed package works outside the repository
+        run: |
+          pip install --force-reinstall --no-deps .
+          cd "$(mktemp -d)"
+          python - <<'PY'
+          from vox2seglam.config import Config
+          from vox2seglam.models import Vox2SegLAM
+          from vox2seglam.postprocess import PlaneShift
+
+          n = sum(p.numel() for p in Vox2SegLAM.from_config(Config()).parameters())
+          assert n == 9026049, f"baseline has {n} parameters, expected 9026049"
+
+          spec = PlaneShift({}).spec
+          assert (len(spec.planes), len(spec.rules)) == (21, 16), "protocol package data missing"
+
+          # named rather than counted: a count goes stale the day a file is added or moved,
+          # and says nothing about which one went missing
+          from pathlib import Path
+          import vox2seglam
+          pkg = Path(vox2seglam.__file__).parent
+          for relative in ("protocol/hoa_protocol.pql",
+                           "protocol/data/landmarks.yaml",
+                           "protocol/data/regions.yaml",
+                           "protocol/data/regions40.yaml",
+                           "configs/experiments/baseline.yaml",
+                           "configs/examples/own_data.yaml",
+                           "templates/train_landmark_16/mean_landmark_coords_voxel_zyx.npy",
+                           "templates/train_landmark_16/std_per_landmark_zyx.npy",
+                           "templates/train_landmark_16/edge_index_mst.pt"):
+              assert (pkg / relative).is_file(), f"{relative} was not installed"
+
+          # a recipe resolves by name from an install, not only from a clone
+          from vox2seglam.config import load_config
+          assert load_config("hoa16f_med_jnt_s1").task.n_classes == 17
+          print(f"installed package self-check passed ({n} parameters)")
+          PY
+
+      - name: The entry point dispatches
+        run: |
+          cd "$(mktemp -d)"
+          vox2seglam --help | grep -q "predict-prepared"
+          vox2seglam predict --help | grep -q -- "--postprocess"
+          # An unknown command must fail AND say so. Written out rather than piped: the
+          # command exits non-zero on purpose, and under `pipefail` that exit code is the
+          # pipeline's, so a `| grep` form reports the refusal as a broken check.
+          if vox2seglam nosuchcommand >unknown.txt 2>&1; then
+            echo "an unknown command should not have succeeded"; cat unknown.txt; exit 1
+          fi
+          grep -q "no command 'nosuchcommand'" unknown.txt
+          echo "entry point ok"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install ruff
+      # The rule set and the line length are pinned in pyproject.toml, so neither
+      # check drifts with ruff releases
+      - run: ruff check .
+      - run: ruff format --check .

@@ -1,0 +1,64 @@
+regions:
+  - id: 1
+    short: LV_L
+    name: Lateral Ventricle Left
+
+  - id: 2
+    short: LV_R
+    name: Lateral Ventricle Right
+
+  - id: 3
+    short: V3
+    name: Third Ventricle
+
+  - id: 4
+    short: NACC_L
+    name: Nucleus Accumbens Left
+
+  - id: 5
+    short: NACC_R
+    name: Nucleus Accumbens Right
+
+  - id: 6
+    short: PUT_L
+    name: Putamen Left
+
+  - id: 7
+    short: PUT_R
+    name: Putamen Right
+
+  - id: 8
+    short: BRAINSTEM
+    name: Brainstem
+
+  - id: 9
+    short: TH_L
+    name: Thalamus Left
+
+  - id: 10
+    short: TH_R
+    name: Thalamus Right
+
+  - id: 11
+    short: IH_L
+    name: Inferior Horn of the Lateral Ventricle Left
+
+  - id: 12
+    short: IH_R
+    name: Inferior Horn of the Lateral Ventricle Right
+
+  - id: 13
+    short: VDC_A_L
+    name: Anterior Ventral Diencephalon Left
+
+  - id: 14
+    short: VDC_A_R
+    name: Anterior Ventral Diencephalon Right
+
+  - id: 15
+    short: VDC_P_L
+    name: Posterior Ventral Diencephalon Left
+
+  - id: 16
+    short: VDC_P_R
+    name: Posterior Ventral Diencephalon Right

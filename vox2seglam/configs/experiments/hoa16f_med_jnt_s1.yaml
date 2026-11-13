@@ -1,0 +1,20 @@
+# HOA 16 labels, med, end-to-end, no stop-gradient, seed 1
+# same configuration as ablations/gradient_flow/fully_joint_s1
+
+name: hoa16f_med_jnt_s1
+extends: baseline
+
+paths:
+  exp_dir: ./experiments/hoa16f_med_jnt_s1
+model:
+  backbone:
+    encoder_channels: [16, 32, 64, 128, 256]
+    decoder_channels: [128, 64, 32, 16]
+  lam:
+    graph_channels: [160, 160]
+    refine_hidden: 64
+    detach_backbone: false
+    detach_between_steps: false
+    detach_graph_for_refiner: false
+repro:
+  seed: 1

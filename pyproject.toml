@@ -1,0 +1,83 @@
+[build-system]
+# >=77 for the SPDX form of `license`; the TOML-table form it replaces stops
+# building in February 2027
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vox2seglam"
+version = "1.0.0"
+description = "Joint subcortical segmentation and anatomical landmark detection on brain MRI"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Ahmed Rekik", email = "ahmed.rekik.1@ens.etsmtl.ca" }]
+keywords = ["neuroimaging", "mri", "segmentation", "landmark-detection", "graph-neural-network"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Programming Language :: Python :: 3",
+]
+
+# Lower bounds are the oldest versions the test suite was run with (torch 2.8 fails the
+# strict-determinism tests on a GPU, and monai 1.6 needs torch >= 2.8 anyway);
+# requirements-lock.txt pins the environment behind the published results. torch is not
+# pinned to a CUDA build: the default PyPI wheel works on any recent driver (see README).
+dependencies = [
+    "torch>=2.9",
+    "numpy>=1.26,<3",
+    "scipy>=1.11",
+    # the built-in skull stripper: SynthStrip's network in plain PyTorch (21 KB, Apache-2.0)
+    "nipreps-synthstrip>=0.0.1",
+    "nibabel>=5.3",
+    "monai>=1.6",
+    "SimpleITK>=2.3",
+    "tensorboard>=2.14",
+    "pyyaml>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Neuro-iX/Vox2SegLAM"
+Source = "https://github.com/Neuro-iX/Vox2SegLAM"
+Issues = "https://github.com/Neuro-iX/Vox2SegLAM/issues"
+"Trained models" = "https://doi.org/10.5281/zenodo.24205672"
+"Annotations" = "https://doi.org/10.5281/zenodo.24206546"
+
+[project.scripts]
+vox2seglam = "vox2seglam.commands:main"
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# The rule set is pinned, not left to ruff's defaults, so a ruff upgrade cannot change what
+# CI enforces. F catches what matters here - unused imports, undefined names, unused
+# variables, shadowed definitions - and E4/E9 catch import and syntax errors. E7 is left
+# out deliberately: its findings in this code are deliberate one-line compressions
+# (`seen.add(j); stack.append(j)`) and maths-conventional names (`l` for a lasso penalty),
+# which it is not worth churning scientific code to satisfy.
+[tool.ruff]
+line-length = 100          # the convention this code already follows (99th percentile: 98)
+target-version = "py311"   # the floor in requires-python
+
+[tool.ruff.lint]
+select = ["E4", "E9", "F"]
+
+[tool.setuptools.packages.find]
+# the commands live in vox2seglam/commands/ and are reached through one entry point
+include = ["vox2seglam*"]
+
+# Template geometry, the protocol vocabulary, and split definitions are
+# protocol, not data: they must travel with an installed package or a run is
+# not reproducible.
+[tool.setuptools.package-data]
+vox2seglam = [
+    "templates/*/*",
+    "protocol/*.pql", "protocol/data/*",
+    # the recipes, so that `vox2seglam train --config hoa16f_med_jnt_s1` resolves a name
+    # from an installed package and not only from a clone
+    "configs/experiments/*.yaml", "configs/examples/*.yaml",
+]

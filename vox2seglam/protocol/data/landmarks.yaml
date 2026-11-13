@@ -1,0 +1,64 @@
+landmarks:
+  - id: 1
+    short: LM1
+    name: Left Putamen Anterior Start
+
+  - id: 2
+    short: LM2
+    name: Right Putamen Anterior Start
+
+  - id: 3
+    short: LM3
+    name: Left NAcc-Putamen Anterior Contact
+
+  - id: 4
+    short: LM4
+    name: Right NAcc-Putamen Anterior Contact
+
+  - id: 5
+    short: LM5
+    name: Left NAcc-Putamen Posterior Contact
+
+  - id: 6
+    short: LM6
+    name: Right NAcc-Putamen Posterior Contact
+
+  - id: 7
+    short: LM7
+    name: Left NAcc Posterior Limit
+
+  - id: 8
+    short: LM8
+    name: Right NAcc Posterior Limit
+
+  - id: 9
+    short: LM9
+    name: Third Ventricle Anterior Start
+
+  - id: 10
+    short: LM10
+    name: Anterior Commissure
+
+  - id: 11
+    short: LM11
+    name: Left Mammillary Body
+
+  - id: 12
+    short: LM12
+    name: Right Mammillary Body
+
+  - id: 13
+    short: LM13
+    name: Left Continuity of Atrium
+
+  - id: 14
+    short: LM14
+    name: Right Continuity of Atrium
+
+  - id: 15
+    short: LM15
+    name: Posterior Commissure
+
+  - id: 16
+    short: LM16
+    name: Prepontine Fissure

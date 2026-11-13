@@ -1,0 +1,22 @@
+# HOA 40 labels, med, staged curriculum, seed 0
+
+name: hoa40f_med_stg_s0
+extends: baseline
+
+paths:
+  exp_dir: ./experiments/hoa40f_med_stg_s0
+  seg_dir: Segmentation_Volumes_Full40
+  split_train: hoa_cc_train_ids.txt
+  split_val: hoa_cc_val_ids.txt
+  split_test: hoa_cc_test_ids.txt
+task:
+  n_classes: 40
+model:
+  backbone:
+    encoder_channels: [16, 32, 64, 128, 256]
+    decoder_channels: [128, 64, 32, 16]
+  lam:
+    graph_channels: [160, 160]
+    refine_hidden: 64
+repro:
+  seed: 0

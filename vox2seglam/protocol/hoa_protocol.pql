@@ -1,0 +1,93 @@
+# =====================================================================
+# HOA2.0 subcortical protocol -- 16 landmarks, 16 regions
+# Voxel axes (Z, Y, X): +X = left, +Y = anterior, +Z = superior.
+# A plane built from one landmark is parallel to the scanner axis of its
+# type; a plane built from two landmarks follows the line joining them.
+# In a clause side_to(plane, REGION), REGION is the label a voxel failing
+# that clause would be reassigned to; the intended correction applies rules
+# in file order, a reassigned voxel being re-checked by the rule of its new
+# label. scripts/verify_protocol_against_gt.py checks every rule against
+# ground truth.
+# =====================================================================
+
+# ---------------- MIDLINE ----------------
+# midsagittal plane through the anterior commissure (LM10)
+midline_ac              = sagittal_plane(LM10)
+
+# ---------------- CORONAL LIMITS ----------------
+# anterior commissure: anterior limit of the ventral diencephalon
+ac_coronal              = coronal_plane(LM10)
+# third ventricle, anterior start
+v3_start_coronal        = coronal_plane(LM9)
+# putamen, anterior start
+putamen_start_L         = coronal_plane(LM1)
+putamen_start_R         = coronal_plane(LM2)
+# first (anterior) coronal slice where NAcc and putamen touch
+put_nacc_contact_ant_L  = coronal_plane(LM3)
+put_nacc_contact_ant_R  = coronal_plane(LM4)
+# last (posterior) coronal slice where NAcc and putamen touch
+put_nacc_contact_post_L = coronal_plane(LM5)
+put_nacc_contact_post_R = coronal_plane(LM6)
+# NAcc, posterior limit
+nacc_end_L              = coronal_plane(LM7)
+nacc_end_R              = coronal_plane(LM8)
+# mammillary bodies: anterior / posterior ventral diencephalon split
+mammillary_L            = coronal_plane(LM11)
+mammillary_R            = coronal_plane(LM12)
+# continuity of the atrium: lateral ventricle body / inferior horn split
+atrium_L                = coronal_plane(LM13)
+atrium_R                = coronal_plane(LM14)
+
+# ---------------- OBLIQUE AND AXIAL BORDERS ----------------
+# putamen (lateral) / NAcc (medial) border, through the two contact landmarks
+put_nacc_border_L       = sagittal_plane(LM3, LM5)
+put_nacc_border_R       = sagittal_plane(LM4, LM6)
+# lateral ventricle (above) / inferior horn (below) anterior to the atrium: from the atrium to the posterior
+# NAcc-putamen contact, at the level of the ventral striatum, above the temporal lobe
+lv_body_floor_L         = axial_plane(LM13, LM5)
+lv_body_floor_R         = axial_plane(LM14, LM6)
+# superior brainstem border: posterior commissure -> prepontine fissure
+brainstem_top           = axial_plane(LM15, LM16)
+# section of the prepontine fissure: anterior end of the PC -> prepontine line
+prepontine_coronal      = coronal_plane(LM16)
+
+# ---------------- RULES ----------------
+# strictly_<side>_to: terminal boundary, the structure ends before the plane (plane excluded): the NAcc
+# is no longer segmented on the section of the AC nubbin; the anterior VDC starts on the section after
+# the AC; the posterior VDC starts on the section after the posterior limit of the mammillary body.
+# A plane that separates two structures belongs to the one its landmarks are voxels of: the putamen lies strictly
+# lateral to the NAcc border (LM3-LM6 are NAcc voxels), the lateral ventricle strictly above the floor (LM13 is an
+# inferior horn voxel); the midline, through no structure, is shared by left and right.
+# The first and last contact sections (LM3/LM5, LM4/LM6) belong to the contact zone, where the putamen
+# and the NAcc are separated by their border plane; the clauses before / after them are strict.
+# thalamus: split left / right by the midline
+TH_L = left_to(midline_ac, TH_R)
+TH_R = right_to(midline_ac, TH_L)
+
+# putamen: between its anterior start and the first contact slice, then lateral to the NAcc border
+PUT_L = (posterior_to(putamen_start_L) and strictly_anterior_to(put_nacc_contact_ant_L, NACC_L)) or (posterior_to(put_nacc_contact_ant_L) and strictly_left_to(put_nacc_border_L, NACC_L))
+PUT_R = (posterior_to(putamen_start_R) and strictly_anterior_to(put_nacc_contact_ant_R, NACC_R)) or (posterior_to(put_nacc_contact_ant_R) and strictly_right_to(put_nacc_border_R, NACC_R))
+
+# NAcc: from the first section of the putamen (also its own first section) to the first contact slice; medial to the border inside the contact zone; between the last contact slice and its posterior limit
+NACC_L = (strictly_anterior_to(nacc_end_L) and strictly_posterior_to(put_nacc_contact_post_L, PUT_L)) or (anterior_to(put_nacc_contact_post_L) and posterior_to(put_nacc_contact_ant_L) and right_to(put_nacc_border_L, PUT_L)) or (strictly_anterior_to(put_nacc_contact_ant_L, PUT_L) and posterior_to(putamen_start_L))
+NACC_R = (strictly_anterior_to(nacc_end_R) and strictly_posterior_to(put_nacc_contact_post_R, PUT_R)) or (anterior_to(put_nacc_contact_post_R) and posterior_to(put_nacc_contact_ant_R) and left_to(put_nacc_border_R, PUT_R)) or (strictly_anterior_to(put_nacc_contact_ant_R, PUT_R) and posterior_to(putamen_start_R))
+
+# third ventricle: posterior to its anterior start
+V3 = posterior_to(v3_start_coronal)
+
+# inferior horn: anterior to the atrium and below the floor; lateral ventricle: posterior to the atrium, or anterior to it and above the floor
+IH_L = anterior_to(atrium_L, LV_L) and inferior_to(lv_body_floor_L, LV_L)
+IH_R = anterior_to(atrium_R, LV_R) and inferior_to(lv_body_floor_R, LV_R)
+LV_L = posterior_to(atrium_L) or (anterior_to(atrium_L) and strictly_superior_to(lv_body_floor_L, IH_L))
+LV_R = posterior_to(atrium_R) or (anterior_to(atrium_R) and strictly_superior_to(lv_body_floor_R, IH_R))
+
+# brainstem: below the PC -> prepontine line, which the manual draws up to the prepontine fissure; anterior to the
+# fissure, where the brainstem is detached from the rest of the brain, no plane bounds it
+# rejected voxels go to VDC_P_L; the VDC_P_L midline clause below sends the right-side ones to VDC_P_R
+BRAINSTEM = inferior_to(brainstem_top, VDC_P_L) or anterior_to(prepontine_coronal, VDC_P_L)
+
+# ventral diencephalon: anterior part between the AC and the mammillary body, posterior part behind it; split left / right by the midline
+VDC_A_L = anterior_to(mammillary_L, VDC_P_L) and left_to(midline_ac, VDC_A_R) and strictly_posterior_to(ac_coronal)
+VDC_A_R = anterior_to(mammillary_R, VDC_P_R) and right_to(midline_ac, VDC_A_L) and strictly_posterior_to(ac_coronal)
+VDC_P_L = strictly_posterior_to(mammillary_L, VDC_A_L) and left_to(midline_ac, VDC_P_R)
+VDC_P_R = strictly_posterior_to(mammillary_R, VDC_A_R) and right_to(midline_ac, VDC_P_L)

@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+title: "Vox2SegLAM: joint subcortical segmentation and anatomical landmark detection on brain MRI"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Rekik
+    given-names: Ahmed
+    email: ahmed.rekik.1@ens.etsmtl.ca
+    affiliation: "École de Technologie Supérieure"
+    orcid: "https://orcid.org/0009-0001-9369-857X"
+license: MIT
+version: 1.0.0
+date-released: "2026-11-06"
+repository-code: "https://github.com/Neuro-iX/Vox2SegLAM"
+url: "https://github.com/Neuro-iX/Vox2SegLAM"
+doi: "10.5281/zenodo.24205672"
+abstract: >-
+  Vox2SegLAM predicts subcortical structures and anatomical landmarks from a T1-weighted
+  brain MRI in a single forward pass. A residual U-Net produces the features; a graph
+  network refines landmark coordinates over a landmark graph and a local patch head adds
+  a sub-voxel correction. The anatomical protocol that places a structure boundary on a
+  landmark plane is written in a small declarative language and can be enforced on the
+  predicted segmentation.
+keywords:
+  - neuroimaging
+  - magnetic resonance imaging
+  - image segmentation
+  - landmark detection
+  - graph neural network
+  - subcortical structures
